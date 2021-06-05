@@ -1,31 +1,40 @@
 window.onload = function () {
-  setInterval(executar, 1000 / 60);
+  iniciar(); //Inicializa os comandos e variáveis
+  setInterval(principal, 1000 / 60); //Roda o jogo dentro do laço
 };
 
-var folhaDesenho = document.querySelector('#folha');
-var areaDesenho = folhaDesenho.getContext('2d');
-var larguraCampo = 600;
-var alturaCampo = 500;
-var espessuraRede = 5;
-var diametroBola = 10;
-var alturaRaquete = 100;
-var posicaoBolaX = 10;
-var posicaoBolaY = posicaoBolaX;
-var velocidadeBolaPosicaoX = 4;
-var velocidadeBolaPosicaoY = velocidadeBolaPosicaoX;
-var espessuraRaquete = 11;
-var posicaoJogador1 = 200;
-var posicaoJogador2 = posicaoJogador1;
-var efeitoRaquete = 0.3;
-var pontuacaoJogardor1 = 0;
-var pontuacaoJogardor2 = pontuacaoJogardor1;
-var velocidadeJogador2 = 5;
+function iniciar() {
+  folhaDesenho = document.querySelector('#folha');
+  areaDesenho = folhaDesenho.getContext('2d');
+  larguraCampo = 600;
+  alturaCampo = 500;
+  espessuraRede = 5;
+  diametroBola = 10;
+  alturaRaquete = 100;
+  posicaoBolaX = 10;
+  posicaoBolaY = posicaoBolaX;
+  velocidadeBolaPosicaoX = 4;
+  velocidadeBolaPosicaoY = velocidadeBolaPosicaoX;
+  espessuraRaquete = 11;
+  posicaoJogador1 = 200;
+  posicaoJogador2 = posicaoJogador1;
+  efeitoRaquete = 0.3;
+  pontuacaoJogardor1 = 0;
+  pontuacaoJogardor2 = pontuacaoJogardor1;
+  velocidadeJogador2 = 8;
+  folhaDesenho.addEventListener('mousemove', function (e) {
+    posicaoJogador1 = e.clientY - alturaRaquete / 2;
+  });
+}
 
-folhaDesenho.addEventListener('mousemove', function (e) {
-  posicaoJogador1 = e.clientY - alturaRaquete / 2;
-});
+function continuar() {
+  posicaoBolaX = larguraCampo / 2;
+  posicaoBolaY = alturaCampo;
+  velocidadeBolaPosicaoX = -velocidadeBolaPosicaoX;
+  velocidadeBolaPosicaoY = 3;
+}
 
-function executar() {
+function desenhar() {
   //Canvas
   areaDesenho.fillStyle = '#286047';
   areaDesenho.fillRect(0, 0, larguraCampo, alturaCampo);
@@ -62,6 +71,9 @@ function executar() {
     larguraCampo - 200,
     20
   );
+}
+
+function calcular() {
   //Verifica Lateral Superior
   if (posicaoBolaY < 0 && velocidadeBolaPosicaoY < 0) {
     velocidadeBolaPosicaoY = -velocidadeBolaPosicaoY;
@@ -84,10 +96,7 @@ function executar() {
       //Pontos Jogador 2
       pontuacaoJogardor2++;
       //Colocar bola no centro
-      posicaoBolaX = larguraCampo / 2;
-      posicaoBolaY = alturaCampo / 2;
-      velocidadeBolaPosicaoX = -velocidadeBolaPosicaoX;
-      velocidadeBolaPosicaoY = 3;
+      continuar();
     }
   }
   //Verifica se o Jogador 1 fez ponto
@@ -104,10 +113,7 @@ function executar() {
       //Pontos Jogador 1
       pontuacaoJogardor1++;
       //Colocar bola no centro
-      posicaoBolaX = larguraCampo / 2;
-      posicaoBolaY = alturaCampo / 2;
-      velocidadeBolaPosicaoX = -velocidadeBolaPosicaoX;
-      velocidadeBolaPosicaoY = 3;
+      continuar();
     }
   }
   //Atualiza a posição do Jogador 2
@@ -116,4 +122,9 @@ function executar() {
   } else {
     posicaoJogador2 = posicaoJogador2 - velocidadeJogador2;
   }
+}
+
+function principal() {
+  desenhar();
+  calcular();
 }
